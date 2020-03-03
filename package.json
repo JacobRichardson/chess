@@ -1,0 +1,23 @@
+{
+  "name": "chess",
+  "version": "1.0.0",
+  "description": "The board game of chess.",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape src/test/**/*.js",
+    "doc": "jsdoc -c jsdoc.json",
+    "lint": "eslint --fix . && echo 'Lint complete.'",
+    "watch": "watch 'clear && npm run -s test | tap-nirvana && npm run -s lint' src"
+  },
+  "author": "Jacob Richardson",
+  "license": "ISC",
+  "dependencies": {
+    "tape": "^4.13.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "jsdoc": "^3.6.3",
+    "tap-nirvana": "^1.1.0",
+    "watch": "^1.0.2"
+  }
+}
