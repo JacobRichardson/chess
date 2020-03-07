@@ -1,12 +1,13 @@
 /** 
- * The pawn module.
+ * The Pawn module. This creates a Pawn chess piece.
  */
 
 // Imports.
 const Piece = require('./piece');
-
+const slideDirectionMoves = require('../lib/slideDirectionMoves');
+const verifyArgTypes = require('../lib/verifyArgTypes');
 /**
- * The pawn class. Creates a pawn chess piece.
+ * The Pawn class. Creates a Pawn chess piece.
  * @class Pawn
  * @extends {Piece}
  */
@@ -14,114 +15,87 @@ class Pawn extends Piece {
 
 	/**
 	 * Creates an instance of Pawn.
-	 * @param {*} color
-	 * @param {*} col
-	 * @param {*} row
+	 * @param {String} color The color of the piece.
 	 * @memberof Pawn
 	 */
-	constructor(color, col, row) {
+	constructor(color) {
 
-		// Invoke the parent's constructor.
-		super(color, 'Pawn', col, row);
+		// Declare the types.
+		const types = ['string'];
 
-		// If the color is white and the row is not 2.
-		if (color === 'white' && row !== 2) {
+		// Verify they are the correct types.
+		verifyArgTypes(constructor, arguments, types)
 
-			// Set has moved to true.
-			this.hasMoved = true;
-		}
-		// If the color is black and the row is not 7.
-		else if (color === 'black' && row !== 7) {
+		// Invoke the parent's constructor with the type of the piece.
+		super(color, 'Pawn');
 
-			// Set has moved to true.
-			this.hasMoved = true;
-		}
-		// The pawn is on white and on row 2 or the pawn is black and on row 7.
-		else {
-
-			// Set the property has moved to be false.
-			this.hasMoved = false;
-		}
+		// Set has moved to be false.
+		this.hasMoved = false;
 	}
 
 	/**
-	 *
-	 *
-	 * @param {*} board
-	 * @returns
+	 * Determines the legal moves for a Pawn on the board at the
+	 * given location.
+	 * @param {String} col The column of where the piece is located.
+	 * @param {Number} row The row of where the piece is located.
+	 * @param {Object} board The board.
+	 * @returns {Array<Object>} An array of legal move objects with properties col and row.
 	 * @memberof Pawn
 	 */
-	getLegalMoves(board) {
+	getLegalMoves(col, row, board) {
 
-		// If board is undefined.
-		if (board === undefined) {
+		// Declare the types.
+		const types = ['string', 'number', 'object'];
 
-			// Throw a new error.
-			throw new Error('The parameter board must be provided to the \'getLegalMoves\' function');
+		// Verify the arguments are defined and the proper types.
+		verifyArgTypes(this.getLegalMoves, arguments, types);
+
+		// Variable for forward moves and forward attacks. Different for black and white.
+		let forward, forwardAttackLeft, forwardAttackRight;
+
+		// If the color of the pawn is white.
+		if (this.color === 'white') {
+
+			// Retrieve sliding up 2 and diagonal 'up' attacks.
+			forward = slideDirectionMoves(col, row, board, 'up', 2);
+			forwardAttackLeft = slideDirectionMoves(col, row, board, 'upperLeft', 1);
+			forwardAttackRight = slideDirectionMoves(col, row, board, 'upperRight', 1);
+
+		}
+		// The pawn is black.
+		else {
+
+			// Retrieve sliding down 2 and diagonal 'down' attacks.
+			forward = slideDirectionMoves(col, row, board, 'down', 2);
+			forwardAttackLeft = slideDirectionMoves(col, row, board, 'lowerLeft', 1);
+			forwardAttackRight = slideDirectionMoves(col, row, board, 'lowerRight', 1);
+		}
+
+		// If the pawn has moved and there are 2 different legal moves.
+		if (this.hasMoved && forward.length == 2) {
+
+			// Remove the second up legal move.
+			forward.pop();
 		}
 
 		// Create a legal moves array.
-		const legalMoves = [];
-
-		// FORWARD MOVES.
-
-		// If the pawn hasn't moved yet.
-		if (this.hasMoved === false) {
-
-			// If forward one square exits, is unoccupied, forward two squares exists, and it is unoccupied.
-			if (board[this.col + (this.row + 1)] && board[this.col + (this.row + 1)].occupied === false &&
-				board[this.col + (this.row + 2)] && board[this.col + (this.row + 2)].occupied === false) {
-
-				// Push in the legal move of moving forward two squares.
-				legalMoves.push({
-					col: this.col
-					, row: this.row + 2
-				});
-			}
-		}
-
-		// If one square forward exists on the board and it is unoccupied.
-		if (board[this.col + (this.row + 1)] && board[this.col + (this.row + 1)].occupied === false) {
-
-			// Push in the legal move of moving forward one square.
-			legalMoves.push({
-				col: this.col
-				, row: this.row + 1
-			});
-		}
-
-		// CAPTURE MOVES.
-
-		// Create the upper right diagonal by adding 1 to the col and 1 to the row. 
-		const upperRightDiagonal = String.fromCharCode(this.col.charCodeAt(0) + 1) + (this.row + 1);
-
-		// Create the upper left diagonal by subtracting 1 from the col and adding 1 to the row.
-		const upperLeftDiagonal = String.fromCharCode(this.col.charCodeAt(0) - 1) + (this.row + 1);
-
-		// If the upper right diagonal is on the board, is occupied, and the piece is not the same color.
-		if (board[upperRightDiagonal] && board[upperRightDiagonal].occupied && board[upperRightDiagonal].piece.color !== this.color) {
-
-			// Push the upper right diagonal as a legal move.
-			legalMoves.push({
-				col: upperRightDiagonal[0]
-				, row: this.row + 1
-			});
-		}
-
-		// If the upper left diagonal is on the board, is occupied, and the piece is not the same color.
-		if (board[upperLeftDiagonal] && board[upperLeftDiagonal].occupied && board[upperLeftDiagonal].piece.color !== this.color) {
-
-			// Push the upper left diagonal as a legal move.
-			legalMoves.push({
-				col: upperLeftDiagonal[0]
-				, row: this.row + 1
-			});
-		}
+		const legalMoves = forwardAttackLeft.concat(forward).concat(forwardAttackRight);
 
 		//TODO: Implement 'en passant'
 
 		// Return the legal moves array.
 		return legalMoves;
+	}
+
+	/**
+	 * Set's the has moved property to a value.
+	 * @param {Boolean} value The value has move is going to be set to.
+	 * @memberof Pawn
+	 */
+	setHasMoved(value) {
+
+		// Set has moved to the pass in value.
+		this.hasMoved = value;
 	}
 }
 
