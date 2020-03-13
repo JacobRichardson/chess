@@ -5,7 +5,8 @@
  */
 
 // Imports.
-const verifyArgTypes = require('../lib/verifyArgTypes');
+// TODO: Uncomment import.
+// const verifyArgTypes = require('../lib/verifyArgTypes');
 
 /**
  * The piece class. A class for chess pieces.
@@ -23,10 +24,10 @@ class Piece {
 	constructor(color, type) {
 
 		// Declare the argument types.
-		const argumentTypes = ['string', 'string'];
+		// const argumentTypes = ['string', 'string'];
 
 		// Verify the arguments are defined and of correct type.
-		verifyArgTypes(constructor, arguments, argumentTypes)
+		// verifyArgTypes(constructor, arguments, argumentTypes)
 
 		// Set values onto the instance of the piece.
 		this.color = color;
