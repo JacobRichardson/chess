@@ -5,7 +5,11 @@
 // Imports.
 const Piece = require('./piece');
 const slideDirectionMoves = require('../lib/slideDirectionMoves');
-const verifyArgTypes = require('../lib/verifyArgTypes');
+
+// TODO: Uncomment import if necessary.
+// const verifyArgTypes = require('../lib/verifyArgTypes');
+
+
 /**
  * The Pawn class. Creates a Pawn chess piece.
  * @class Pawn
