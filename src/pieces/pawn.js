@@ -20,11 +20,13 @@ class Pawn extends Piece {
 	 */
 	constructor(color) {
 
+		// TODO: Uncomment argument type checking if necessary.
+
 		// Declare the types.
-		const types = ['string'];
+		// const types = ['string'];
 
 		// Verify they are the correct types.
-		verifyArgTypes(constructor, arguments, types)
+		// verifyArgTypes(constructor, arguments, types)
 
 		// Invoke the parent's constructor with the type of the piece.
 		super(color, 'Pawn');
@@ -44,11 +46,13 @@ class Pawn extends Piece {
 	 */
 	getLegalMoves(col, row, board) {
 
+		// TODO: Uncomment argument type checking if necessary.
+
 		// Declare the types.
-		const types = ['string', 'number', 'object'];
+		// const types = ['string', 'number', 'object'];
 
 		// Verify the arguments are defined and the proper types.
-		verifyArgTypes(this.getLegalMoves, arguments, types);
+		// verifyArgTypes(this.getLegalMoves, arguments, types);
 
 		// Variable for forward moves and forward attacks. Different for black and white.
 		let forward, forwardAttackLeft, forwardAttackRight;
